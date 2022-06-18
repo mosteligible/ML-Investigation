@@ -2,14 +2,13 @@ from pathlib import Path
 import numpy as np
 import tensorflow as tf
 from collections import Counter
-from tensorflow.keras.models import load_model
 
 
 PATH = Path.cwd().parent.absolute()
 
 with open(PATH / "test_models/feature.log", "r") as fp:
     FEATURES = fp.read().split(" ")
-MODEL = load_model(PATH / "/server/model-weights.h5")
+MODEL = tf.keras.models.load_model(PATH / "/server/model-weights.h5")
 FEATURES_SIZE = len(FEATURES)
 
 
@@ -18,15 +17,14 @@ def predict(payload):
     print("Input splitted payload", input_text.split())
     input_text = Counter(input_text.split())
     print("\nCounter of input split text:", input_text)
-    input_feature = [0] * FEATURES_SIZE  # np.zeros(shape=(1, FEATURES_SIZE))
+    input_feature = np.zeros(shape=(1, FEATURES_SIZE))
     for word, occurence in input_text.items():
         try:
             word_index = FEATURES.index(word)
         except ValueError:
             print(f"{word} does not exist in vocabulary!")
             continue
-        input_feature[word_index] = occurence
-    input_feature = [input_feature, ]
+        input_feature[0, word_index] = occurence
     prediction = MODEL.predict(input_feature)
     return prediction
 
