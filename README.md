@@ -49,6 +49,8 @@ FastApi server was not serving numpy float. ASGI server was breaking. The issue 
 >>> x = numpy.array([1.1, 2.2, 3.3])
 >>> type(x)
 <class 'numpy.float64'>
+>>> type(x[0])
+<class 'numpy.float64'>
 >>> y = float(x[0])
 >>> type(y)
 <class 'float'>
